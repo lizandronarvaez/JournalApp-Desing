@@ -1,8 +1,12 @@
-import { Box, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
-import { TurnedInNot } from "@mui/icons-material";
+import { Box, Divider, Drawer, List, Toolbar, Typography } from '@mui/material';
 import React from 'react'
+import { useSelector } from 'react-redux';
+import SidebarItem from './SidebarItem';
 
 const SideBar = ({ drawerWidth }) => {
+    const { displayName } = useSelector(state => state.auth);
+    const { notes } = useSelector(state => state.journal);
+
     return (
         <Box
             component="nav"
@@ -17,26 +21,31 @@ const SideBar = ({ drawerWidth }) => {
                 }}
             >
                 <Toolbar>
-                    <Typography variant='h6' noWrap component="div">
-                        Lizandro Narvaez
+                    <Typography
+                        variant='h6'
+                        sx={{ textTransform: "capitalize" }}
+                        noWrap
+                        component="div"
+                    >
+                        {displayName}
                     </Typography>
                 </Toolbar>
                 <Divider />
                 <List>
-                    {
-                        ["Enero", "Febrero", "Marzo", "Abril","Mayo","Junio","Julio","Agosto"].map(text => (
-                            <ListItem key={text} disablePadding>
-                                <ListItemButton>
-                                    <ListItemIcon>
-                                        <TurnedInNot />
-                                    </ListItemIcon>
-                                    <Grid container>
-                                        <ListItemText primary={text} />
-                                        <ListItemText secondary={"Este es un ejercicio de materialUi vamos a desarrollarlo"} />
-
-                                    </Grid>
-                                </ListItemButton>
-                            </ListItem>
+                    {notes.length === 0 ?
+                        <Typography
+                            fontSize={".8rem"}
+                            color={"error"}
+                            fontWeight={600}
+                            sx={{ textTransform: "uppercase", textAlign: "center" }}
+                        >
+                            No existen notas disponibles
+                        </Typography>
+                        : notes.map((note, i) => (
+                            <SidebarItem
+                                key={i}
+                                note={note}
+                            />
                         ))
                     }
                 </List>
